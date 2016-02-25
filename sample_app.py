@@ -1,5 +1,5 @@
 from flask import Flask
-from graphql_dom.schema import schema
+from gdom.schema import schema
 from flask_graphql import GraphQL
 
 app = Flask(__name__)
