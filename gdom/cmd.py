@@ -30,7 +30,7 @@ SAMPLE_QUERY = '''
 '''.strip()
 
 
-def run_test_server():
+def get_test_app():
     app = Flask(__name__)
     app.debug = True
 
@@ -44,10 +44,7 @@ def run_test_server():
 
     app.register_blueprint(blueprint)
 
-    import webbrowser
-    webbrowser.open('http://localhost:5000/')
-
-    app.run()
+    return app
 
 
 def parse(query, source, page):
@@ -72,7 +69,11 @@ def main():
     args = parser.parse_args()
 
     if args.test:
-        run_test_server()
+        app = get_test_app()
+        import webbrowser
+        webbrowser.open('http://localhost:5000/')
+
+        app.run()
     else:
         query = args.query.read()
         page = args.page
