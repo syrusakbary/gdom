@@ -68,7 +68,9 @@ class Node(graphene.Interface):
         return self._root.parents(selector).items()
 
     def resolve_parent(self, args, info):
-        return self._root.parents().eq(0)
+        parent = self._root.parents().eq(-1)
+        if parent:
+            return parent
 
 
 def get_page(page):
