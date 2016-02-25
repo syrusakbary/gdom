@@ -10,6 +10,8 @@ Install it typing in your console:
 
     pip install gdom
 
+**DEMO**: `Try GDOM online <http://gdom.graphene-python.org/>`__
+
 Usage
 -----
 
