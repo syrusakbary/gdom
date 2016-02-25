@@ -21,6 +21,9 @@ queries or
 gdom QUERY_FILE
 ```
 
+This command will write in the standard output (or other output if specified
+via `--output`) the resulting JSON.
+
 Your `QUERY_FILE` could look similar to this:
 
 ```graphql
@@ -37,7 +40,6 @@ Your `QUERY_FILE` could look similar to this:
 }
 ```
 
-This will output the results of your query in a nice json format.
 
 ## Advanced usage
 
