@@ -28,6 +28,12 @@ class Node(graphene.Interface):
                             selector=graphene.String())
     parent = graphene.Field('Element',
                             description='The parent element from self')
+    siblings = graphene.List('Element',
+                            description='The following sibling from self',
+                            selector=graphene.String())
+    next = graphene.Field('Element',
+                          description='The immediately following sibling from self',
+                          selector=graphene.String())
 
     def _query_selector(self, args):
         selector = args.get('selector')
@@ -72,6 +78,16 @@ class Node(graphene.Interface):
         if parent:
             return parent
 
+    def resolve_siblings(self, args, info):
+        selector = args.get('selector')
+        return self.nextAll(selector).items()
+
+    def resolve_next(self, args, info):
+        selector = args.get('selector')
+        n = self.nextAll(selector)
+        if n:
+            return n.eq(0)
+
 
 def get_page(page):
     return pq(page, headers={'user-agent': 'gdom'})
@@ -79,7 +95,7 @@ def get_page(page):
 
 class Document(Node):
     '''
-    The Document Type represent any web page loaded and 
+    The Document Type represent any web page loaded and
     serves as an entry point into the page content
     '''
     title = graphene.String(description='The title of the document')
