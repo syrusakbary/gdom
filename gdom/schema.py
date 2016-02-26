@@ -29,7 +29,7 @@ class Node(graphene.Interface):
     parent = graphene.Field('Element',
                             description='The parent element from self')
     siblings = graphene.List('Element',
-                            description='The following sibling from self',
+                            description='The siblings elements from self',
                             selector=graphene.String())
     next = graphene.Field('Element',
                           description='The immediately following sibling from self',
