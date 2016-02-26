@@ -29,14 +29,20 @@ class Node(graphene.Interface):
     parent = graphene.Field('Element',
                             description='The parent element from self')
     siblings = graphene.List('Element',
-                            description='The siblings elements from self',
-                            selector=graphene.String())
+                             description='The siblings elements from self',
+                             selector=graphene.String())
     next = graphene.Field('Element',
                           description='The immediately following sibling from self',
                           selector=graphene.String())
+    next_all = graphene.Field('Element',
+                              description='The list of following siblings from self',
+                              selector=graphene.String())
     prev = graphene.Field('Element',
                           description='The immediately preceding sibling from self',
                           selector=graphene.String())
+    prev_all = graphene.Field('Element',
+                              description='The list of preceding siblings from self',
+                              selector=graphene.String())
 
     def _query_selector(self, args):
         selector = args.get('selector')
@@ -83,19 +89,27 @@ class Node(graphene.Interface):
 
     def resolve_siblings(self, args, info):
         selector = args.get('selector')
-        return self.siblings(selector).items()
+        return self._root.siblings(selector).items()
 
     def resolve_next(self, args, info):
         selector = args.get('selector')
-        n = self.nextAll(selector)
-        if n:
-            return n.eq(0)
+        _next = self._root.nextAll(selector)
+        if _next:
+            return _next.eq(0)
+
+    def resolve_next_all(self, args, info):
+        selector = args.get('selector')
+        return self._root.nextAll(selector).items()
 
     def resolve_prev(self, args, info):
         selector = args.get('selector')
-        n = self.prevAll(selector)
-        if n:
-            return n.eq(0)
+        prev = self._root.prevAll(selector)
+        if prev:
+            return prev.eq(0)
+
+    def resolve_prev_all(self, args, info):
+        selector = args.get('selector')
+        return self._root.prevAll(selector).items()
 
 
 def get_page(page):
