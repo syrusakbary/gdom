@@ -34,6 +34,9 @@ class Node(graphene.Interface):
     next = graphene.Field('Element',
                           description='The immediately following sibling from self',
                           selector=graphene.String())
+    prev = graphene.Field('Element',
+                          description='The immediately preceding sibling from self',
+                          selector=graphene.String())
 
     def _query_selector(self, args):
         selector = args.get('selector')
@@ -80,11 +83,17 @@ class Node(graphene.Interface):
 
     def resolve_siblings(self, args, info):
         selector = args.get('selector')
-        return self.nextAll(selector).items()
+        return self.siblings(selector).items()
 
     def resolve_next(self, args, info):
         selector = args.get('selector')
         n = self.nextAll(selector)
+        if n:
+            return n.eq(0)
+
+    def resolve_prev(self, args, info):
+        selector = args.get('selector')
+        n = self.prevAll(selector)
         if n:
             return n.eq(0)
 
