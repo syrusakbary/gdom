@@ -34,15 +34,15 @@ class Node(graphene.Interface):
     next = graphene.Field('Element',
                           description='The immediately following sibling from self',
                           selector=graphene.String())
-    next_all = graphene.Field('Element',
-                              description='The list of following siblings from self',
-                              selector=graphene.String())
+    next_all = graphene.List('Element',
+                             description='The list of following siblings from self',
+                             selector=graphene.String())
     prev = graphene.Field('Element',
                           description='The immediately preceding sibling from self',
                           selector=graphene.String())
-    prev_all = graphene.Field('Element',
-                              description='The list of preceding siblings from self',
-                              selector=graphene.String())
+    prev_all = graphene.List('Element',
+                             description='The list of preceding siblings from self',
+                             selector=graphene.String())
 
     def _query_selector(self, args):
         selector = args.get('selector')
