@@ -11,19 +11,17 @@ from schema import schema
 
 SAMPLE_QUERY = '''
 {
-  page(url:"http://www.yelp.com/biz/amnesia-san-francisco") {
-    title: text(selector:"h1")
-    phone: text(selector:".biz-phone")
-    address: text(selector:".address")
-    sections: query(selector:".breadcrumbs--hierarchy a") {
-      text
-      url: attr(name:"href")
-    }
-    reviews: query(selector:"[itemprop=review]") {
-      date: text(selector:".rating-qualifier")
-      rating: attr(selector:"[itemprop=ratingValue]", name:"content")
-      username: text(selector:".user-name a")
-      comment: text(selector:"p")
+  page(url:"http://news.ycombinator.com") {
+    items: query(selector:"tr.athing") {
+      rank: text(selector:"td span.rank")
+      title: text(selector:"td.title a")
+      sitebit: text(selector:"span.comhead a")
+      url: attr(selector:"td.title a", name:"href")
+      attrs: next {
+         score: text(selector:"span.score")
+         user: text(selector:"a:eq(0)")
+         comments: text(selector:"a:eq(2)")
+      }
     }
   }
 }

@@ -30,13 +30,17 @@ Your ``QUERY_FILE`` could look similar to this:
 .. code::
 
     {
-      page(url:"http://www.yelp.com/biz/amnesia-san-francisco") {
-        title: text(selector:"h1")
-        phone: text(selector:".biz-phone")
-        address: text(selector:".address")
-        reviews: query(selector:"[itemprop=review]") {
-          username: text(selector:".user-name a")
-          comment: text(selector:"p")
+      page(url:"http://news.ycombinator.com") {
+        items: query(selector:"tr.athing") {
+          rank: text(selector:"td span.rank")
+          title: text(selector:"td.title a")
+          sitebit: text(selector:"span.comhead a")
+          url: attr(selector:"td.title a", name:"href")
+          attrs: next {
+             score: text(selector:"span.score")
+             user: text(selector:"a:eq(0)")
+             comments: text(selector:"a:eq(2)")
+          }
         }
       }
     }
@@ -60,4 +64,4 @@ And then, query it like:
 
 .. code:: bash
 
-    gdom QUERY_FILE http://www.yelp.com/biz/amnesia-san-francisco
+    gdom QUERY_FILE http://news.ycombinator.com
