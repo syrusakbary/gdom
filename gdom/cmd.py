@@ -53,7 +53,7 @@ def parse(query, source, page):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Parse and scrape any web page using GraphQL queries')
 
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('query', type=argparse.FileType('r'), nargs='?', help='The query file', default=None)
