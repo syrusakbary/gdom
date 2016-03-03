@@ -6,7 +6,7 @@
       location: text(selector:".locality")
       industry: text(selector:".descriptor:not(.adr)")
     }
-    experiencie: query(selector:"#experience .position") {
+    experience: query(selector:"#experience .position") {
       title: text(selector:".item-title")
       company: text(selector:".item-subtitle")
       description: text(selector:".description")
