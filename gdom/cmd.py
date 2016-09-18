@@ -3,9 +3,8 @@ import json
 import sys
 
 import flask_graphql
-from flask import Flask, Blueprint
-from flask_graphql.graphiqlview import GraphiQLView
-from flask_graphql.graphqlview import GraphQLView
+from flask import Flask, Blueprint, url_for
+from flask_graphql import GraphQLView
 
 from schema import schema
 
@@ -28,20 +27,16 @@ SAMPLE_QUERY = '''
 '''.strip()
 
 
+def index_view():
+  url = url_for('graphql', query=SAMPLE_QUERY)
+  return '<a href="{}">Hacker News Parser example</a>'.format(url)
+
 def get_test_app():
     app = Flask(__name__)
     app.debug = True
 
-    blueprint = Blueprint('graphql', flask_graphql.__name__,
-                          template_folder='templates',
-                          static_url_path='/static/graphql',
-                          static_folder='static/graphql/')
-
-    app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema))
-    app.add_url_rule('/', view_func=GraphiQLView.as_view('graphiql', default_query=SAMPLE_QUERY))
-
-    app.register_blueprint(blueprint)
-
+    app.add_url_rule('/graphql', 'graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
+    app.add_url_rule('/', 'index', view_func=index_view,)
     return app
 
 
