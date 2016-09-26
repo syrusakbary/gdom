@@ -15,7 +15,7 @@ setup(name='gdom',
           'console_scripts': ['gdom = gdom.cmd:main']
       },
       install_requires=[
-          'graphene>=1.0.dev',
+          'graphene>=1.0',
           'flask-graphql==1.2.0',
           'pyquery==1.2.11',
           'requests==2.9.1'
