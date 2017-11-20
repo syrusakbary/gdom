@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='gdom',
     version='1.0.0',
-    download_url='git@github.com:syrusakbary/gdom.git',
+    download_url='https://github.com/syrusakbary/gdom/archive/master.zip',
     packages=find_packages(),
     author='Syrus Akbary',
     author_email='me@syrusakbary.com',
