@@ -1,17 +1,17 @@
 {
-  page(url:"http://www.yelp.com/biz/amnesia-san-francisco") {
-    title: text(selector:"h1")
-    phone: text(selector:".biz-phone")
-    address: text(selector:".address")
-    sections: query(selector:".breadcrumbs--hierarchy a") {
+  page(url: "http://www.yelp.com/biz/amnesia-san-francisco") {
+    title: text(selector: "h1")
+    phone: text(selector: ".biz-phone")
+    address: text(selector: ".address")
+    sections: query(selector: ".breadcrumbs--hierarchy a") {
       text
-      url: attr(name:"href")
+      url: attr(name: "href")
     }
-    reviews: query(selector:"[itemprop=review]") {
-      date: text(selector:".rating-qualifier")
-      rating: attr(selector:"[itemprop=ratingValue]", name:"content")
-      username: text(selector:".user-name a")
-      comment: text(selector:"p")
+    reviews: query(selector: "[itemprop=review]") {
+      date: text(selector: ".rating-qualifier")
+      rating: attr(selector: "[itemprop=ratingValue]", name: "content")
+      username: text(selector: ".user-name a")
+      comment: text(selector: "p")
     }
   }
 }

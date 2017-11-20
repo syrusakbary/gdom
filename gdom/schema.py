@@ -2,8 +2,7 @@ import graphene
 from pyquery import PyQuery as pq
 
 
-def _query_selector(pq, args):
-    selector = args.get('selector')
+def _query_selector(pq, selector):
     if not selector:
         return pq
     return pq.find(selector)
@@ -21,7 +20,7 @@ class Node(graphene.Interface):
                           selector=graphene.String())
     attr = graphene.String(description='The DOM attr of the Node',
                            selector=graphene.String(),
-                           _name=graphene.String(name='name', required=True))
+                           name=graphene.String(required=True))
     _is = graphene.Boolean(description='Returns True if the DOM matches the selector',
                            name='is', selector=graphene.String(required=True))
     query = graphene.List(lambda: Element,
@@ -51,65 +50,57 @@ class Node(graphene.Interface):
                              description='The list of preceding siblings from self',
                              selector=graphene.String())
 
-    def resolve_content(self, args, context, info):
-        return _query_selector(self, args).eq(0).html()
+    def resolve_content(self, info, selector):
+        return _query_selector(self, selector).eq(0).html()
 
-    def resolve_html(self, args, context, info):
-        return _query_selector(self, args).outerHtml()
+    def resolve_html(self, info, selector):
+        return _query_selector(self, selector).outerHtml()
 
-    def resolve_text(self, args, context, info):
-        return _query_selector(self, args).eq(0).remove('script').text()
+    def resolve_text(self, info, selector):
+        return _query_selector(self, selector).eq(0).remove('script').text()
 
-    def resolve_tag(self, args, context, info):
-        el = _query_selector(self, args).eq(0)
+    def resolve_tag(self, info, selector):
+        el = _query_selector(self, selector).eq(0)
         if el:
             return el[0].tag
 
-    def resolve__is(self, args, context, info):
-        return self.is_(args.get('selector'))
+    def resolve__is(self, info, selector=None):
+        return self.is_(selector)
 
-    def resolve_attr(self, args, context, info):
-        attr = args.get('name')
-        return _query_selector(self, args).attr(attr)
+    def resolve_attr(self, info, name, selector=None):
+        return _query_selector(self, selector).attr(name)
 
-    def resolve_query(self, args, context, info):
-        return _query_selector(self, args).items()
+    def resolve_query(self, info, selector=None):
+        return _query_selector(self, selector).items()
 
-    def resolve_children(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_children(self, info, selector=None):
         return self.children(selector).items()
 
-    def resolve_parents(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_parents(self, info, selector=None):
         return self.parents(selector).items()
 
-    def resolve_parent(self, args, context, info):
+    def resolve_parent(self, info):
         parent = self.parents().eq(-1)
         if parent:
             return parent
 
-    def resolve_siblings(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_siblings(self, info, selector=None):
         return self.siblings(selector).items()
 
-    def resolve_next(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_next(self, info, selector=None):
         _next = self.nextAll(selector)
         if _next:
             return _next.eq(0)
 
-    def resolve_next_all(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_next_all(self, info, selector=None):
         return self.nextAll(selector).items()
 
-    def resolve_prev(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_prev(self, info, selector=None):
         prev = self.prevAll(selector)
         if prev:
             return prev.eq(0)
 
-    def resolve_prev_all(self, args, context, info):
-        selector = args.get('selector')
+    def resolve_prev_all(self, info, selector=None):
         return self.prevAll(selector).items()
 
 
@@ -128,10 +119,10 @@ class Document(graphene.ObjectType):
     title = graphene.String(description='The title of the document')
 
     @classmethod
-    def is_type_of(cls, root, context, info):
-        return isinstance(root, pq) or super(Document, cls).is_type_of(root, context, info)
+    def is_type_of(cls, root, info):
+        return isinstance(root, pq) or super(Document, cls).is_type_of(root, info)
 
-    def resolve_title(self, args, context, info):
+    def resolve_title(self, info):
         return self.find('title').eq(0).text()
 
 
@@ -146,10 +137,10 @@ class Element(graphene.ObjectType):
                            description='Visit will visit the href of the link and return the corresponding document')
 
     @classmethod
-    def is_type_of(cls, root, context, info):
-        return isinstance(root, pq) or super(Element, cls).is_type_of(root, context, info)
+    def is_type_of(cls, root, info):
+        return isinstance(root, pq) or super(Element, cls).is_type_of(root, info)
 
-    def resolve_visit(self, args, context, info):
+    def resolve_visit(self, info):
         # If is a link we follow through href attr
         # return the resulting Document
         if self.is_('a'):
@@ -160,13 +151,13 @@ class Element(graphene.ObjectType):
 class Query(graphene.ObjectType):
     page = graphene.Field(Document,
                           description='Visit the specified page',
-                          url=graphene.String(description='The url of the page'),
-                          _source=graphene.String(name='source', description='The source of the page')
+                          url=graphene.String(
+                              description='The url of the page'),
+                          _source=graphene.String(
+                              name='source', description='The source of the page')
                           )
 
-    def resolve_page(self, args, context, info):
-        url = args.get('url')
-        source = args.get('source')
+    def resolve_page(self, info, url=None, source=None):
         assert url or source, 'At least you have to provide url or source of the page'
         return get_page(url or source)
 

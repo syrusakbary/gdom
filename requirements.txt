@@ -1,6 +1,6 @@
-graphene>=1.0
-flask-graphql>=1.2.0
-pyquery==1.2.11
+graphene==2.0.1
+flask-graphql==1.4.1
+pyquery==1.3.0
 requests==2.9.1
 # For the sample_app server
 gunicorn==19.4.5
