@@ -19,7 +19,7 @@ setup(
         'graphene==2.0.1',
         'flask-graphql==1.4.1',
         'pyquery==1.3.0',
-        'requests==2.9.1'
+        'requests==2.20.0'
     ],
     tests_require=[
     ]
